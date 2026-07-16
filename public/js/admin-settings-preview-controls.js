@@ -222,6 +222,7 @@
       refs.homeSiteDescriptionInput,
       refs.homeFooterTextInput,
       refs.hideAdminSwitch,
+      refs.hideSearchSwitch,
       refs.searchEngineSwitch,
       refs.hideTitleSwitch,
       refs.homeTitleFontInput,
