@@ -707,8 +707,8 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
 
 .site-card.style-5 .site-title {
     text-align: center;
-    font-weight: 600;
-    font-size: 0.9375rem;
+    font-weight: 700;
+    font-size: 1.125rem;
     margin-bottom: 4px;
 }
 
@@ -727,10 +727,10 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
     display: block;
     text-align: center;
     color: #fff;
-    padding: 6px 0;
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 1px;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
     text-decoration: none;
     transition: opacity 0.2s;
 }
@@ -755,13 +755,17 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
         border-radius: 16px;
     }
     .site-card.style-5 .card-accent-bar {
-        height: 64px;
+        height: 50px;
     }
     .site-card.style-5 .card-logo-wrap {
-        margin-top: -28px;
+        margin-top: -24px;
     }
     .site-card.style-5 .card-body-area {
-        padding: 36px 10px 8px;
+        padding: 24px 10px 8px;
+    }
+    .site-card.style-5 .card-visit-btn {
+        padding: 8px 0;
+        font-size: 0.875rem;
     }
 }
 
@@ -2098,6 +2102,14 @@ html:not(.dark) .dropdown-item.active {
 
 .category-section-heading {
   grid-column: 1 / -1;
+}
+
+.category-section-heading h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  border-color: rgba(255,255,255,0.25) !important;
 }
 
 [data-role="list-heading"] {
