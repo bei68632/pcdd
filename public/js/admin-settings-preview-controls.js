@@ -156,13 +156,14 @@
     const btn3 = document.getElementById('btnStyle3');
     const btn4 = document.getElementById('btnStyle4');
     const btn5 = document.getElementById('btnStyle5');
+    const btn6 = document.getElementById('btnStyle6');
     const preview1 = document.getElementById('cardStyle1PreviewContainer');
     const preview2 = document.getElementById('cardStyle2PreviewContainer');
     const preview3 = document.getElementById('cardStyle3PreviewContainer');
 
     if (!btn1 || !btn2 || !btn3 || !preview1 || !preview2 || !preview3) return;
 
-    [btn1, btn2, btn3, btn4, btn5].forEach(btn => {
+    [btn1, btn2, btn3, btn4, btn5, btn6].forEach(btn => {
       if (btn) btn.className = 'card-style-btn card-segment-option';
     });
     [preview1, preview2, preview3].forEach(preview => preview.classList.add('hidden'));
@@ -173,6 +174,9 @@
     } else if (style === 'style3') {
       btn3.classList.add('active');
       preview3.classList.remove('hidden');
+    } else if (style === 'style6') {
+      btn6.classList.add('active');
+      preview1.classList.remove('hidden');
     } else {
       btn1.classList.add('active');
       preview1.classList.remove('hidden');
@@ -196,9 +200,10 @@
     const btn3 = document.getElementById('mobileBtnStyle3');
     const btn4 = document.getElementById('mobileBtnStyle4');
     const btn5 = document.getElementById('mobileBtnStyle5');
+    const btn6 = document.getElementById('mobileBtnStyle6');
     if (!btn1 || !btn2 || !btn3) return;
 
-    [btn1, btn2, btn3, btn4, btn5].forEach(btn => {
+    [btn1, btn2, btn3, btn4, btn5, btn6].forEach(btn => {
       if (btn) btn.className = 'card-style-btn card-segment-option';
     });
 
@@ -206,6 +211,8 @@
       (style === 'style4' ? btn4 : style === 'style5' ? btn5 : btn2).classList.add('active');
     } else if (style === 'style3') {
       btn3.classList.add('active');
+    } else if (style === 'style6') {
+      btn6.classList.add('active');
     } else {
       btn1.classList.add('active');
     }
@@ -390,6 +397,7 @@
     document.getElementById('btnStyle3')?.addEventListener('click', () => selectCardStyle('style3'));
     document.getElementById('btnStyle4')?.addEventListener('click', () => selectCardStyle('style4'));
     document.getElementById('btnStyle5')?.addEventListener('click', () => selectCardStyle('style5'));
+    document.getElementById('btnStyle6')?.addEventListener('click', () => selectCardStyle('style6'));
     document.getElementById('mobileBtnStyle1')?.addEventListener('click', () => selectMobileCardStyle('style1'));
     document.getElementById('mobileBtnStyle2')?.addEventListener('click', () => selectMobileCardStyle('style2'));
     document.getElementById('mobileBtnStyle3')?.addEventListener('click', () => selectMobileCardStyle('style3'));

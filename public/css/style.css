@@ -503,14 +503,14 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
   height: 104px;
 }
 
-.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5) .site-icon {
+.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5):not(.style-6) .site-icon {
   width: 2.5rem; margin-right: 1rem; opacity: 1;
 }
-.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5):hover .site-icon {
+.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5):not(.style-6):hover .site-icon {
   width: 0; margin-right: 0; opacity: 0; transition-delay: 0.1s;
 }
-.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5) .site-title { transform-origin: left center; }
-.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5):hover .site-title { transform: scale(1.2); transition-delay: 0.1s; }
+.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5):not(.style-6) .site-title { transform-origin: left center; }
+.site-card:not(.style-2):not(.style-3):not(.style-4):not(.style-5):not(.style-6):hover .site-title { transform: scale(1.2); transition-delay: 0.1s; }
 
 /* 风格二 (垂直布局) — 小屏 (max-width:400px) 样式已合并到文件底部统一断点中 */
 .site-card.style-2 .flex.items-start {
@@ -583,6 +583,24 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
 
 .dark .site-card.style-2 .mt-3.flex {
     border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 风格六：基于风格一，无 Logo，仅显示书签名（风格一悬停状态） */
+.site-card.style-6 .site-icon {
+    width: 0 !important;
+    margin-right: 0 !important;
+    opacity: 0 !important;
+}
+
+.site-card.style-6 .site-title {
+    transform: scale(1.15);
+    transform-origin: left center;
+}
+
+.site-card.style-6:hover .site-icon {
+    width: 0 !important;
+    margin-right: 0 !important;
+    opacity: 0 !important;
 }
 
 /* 风格四：基于风格二垂直布局，Logo 放大到 104px */
