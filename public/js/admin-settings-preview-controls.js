@@ -403,6 +403,7 @@
     document.getElementById('mobileBtnStyle3')?.addEventListener('click', () => selectMobileCardStyle('style3'));
     document.getElementById('mobileBtnStyle4')?.addEventListener('click', () => selectMobileCardStyle('style4'));
     document.getElementById('mobileBtnStyle5')?.addEventListener('click', () => selectMobileCardStyle('style5'));
+    document.getElementById('mobileBtnStyle6')?.addEventListener('click', () => selectMobileCardStyle('style6'));
     document.querySelectorAll('.card-animation-option[data-animation-device="desktop"]').forEach(option => {
       option.addEventListener('click', () => {
         if (!refs.cardAnimationSelect) return;
