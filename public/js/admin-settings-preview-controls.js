@@ -154,19 +154,21 @@
     const btn1 = document.getElementById('btnStyle1');
     const btn2 = document.getElementById('btnStyle2');
     const btn3 = document.getElementById('btnStyle3');
+    const btn4 = document.getElementById('btnStyle4');
+    const btn5 = document.getElementById('btnStyle5');
     const preview1 = document.getElementById('cardStyle1PreviewContainer');
     const preview2 = document.getElementById('cardStyle2PreviewContainer');
     const preview3 = document.getElementById('cardStyle3PreviewContainer');
 
     if (!btn1 || !btn2 || !btn3 || !preview1 || !preview2 || !preview3) return;
 
-    [btn1, btn2, btn3].forEach(btn => {
-      btn.className = 'card-style-btn card-segment-option';
+    [btn1, btn2, btn3, btn4, btn5].forEach(btn => {
+      if (btn) btn.className = 'card-style-btn card-segment-option';
     });
     [preview1, preview2, preview3].forEach(preview => preview.classList.add('hidden'));
 
-    if (style === 'style2') {
-      btn2.classList.add('active');
+    if (style === 'style2' || style === 'style4' || style === 'style5') {
+      (style === 'style4' ? btn4 : style === 'style5' ? btn5 : btn2).classList.add('active');
       preview2.classList.remove('hidden');
     } else if (style === 'style3') {
       btn3.classList.add('active');
@@ -192,14 +194,16 @@
     const btn1 = document.getElementById('mobileBtnStyle1');
     const btn2 = document.getElementById('mobileBtnStyle2');
     const btn3 = document.getElementById('mobileBtnStyle3');
+    const btn4 = document.getElementById('mobileBtnStyle4');
+    const btn5 = document.getElementById('mobileBtnStyle5');
     if (!btn1 || !btn2 || !btn3) return;
 
-    [btn1, btn2, btn3].forEach(btn => {
-      btn.className = 'card-style-btn card-segment-option';
+    [btn1, btn2, btn3, btn4, btn5].forEach(btn => {
+      if (btn) btn.className = 'card-style-btn card-segment-option';
     });
 
-    if (style === 'style2') {
-      btn2.classList.add('active');
+    if (style === 'style2' || style === 'style4' || style === 'style5') {
+      (style === 'style4' ? btn4 : style === 'style5' ? btn5 : btn2).classList.add('active');
     } else if (style === 'style3') {
       btn3.classList.add('active');
     } else {
@@ -383,9 +387,13 @@
     document.getElementById('btnStyle1')?.addEventListener('click', () => selectCardStyle('style1'));
     document.getElementById('btnStyle2')?.addEventListener('click', () => selectCardStyle('style2'));
     document.getElementById('btnStyle3')?.addEventListener('click', () => selectCardStyle('style3'));
+    document.getElementById('btnStyle4')?.addEventListener('click', () => selectCardStyle('style4'));
+    document.getElementById('btnStyle5')?.addEventListener('click', () => selectCardStyle('style5'));
     document.getElementById('mobileBtnStyle1')?.addEventListener('click', () => selectMobileCardStyle('style1'));
     document.getElementById('mobileBtnStyle2')?.addEventListener('click', () => selectMobileCardStyle('style2'));
     document.getElementById('mobileBtnStyle3')?.addEventListener('click', () => selectMobileCardStyle('style3'));
+    document.getElementById('mobileBtnStyle4')?.addEventListener('click', () => selectMobileCardStyle('style4'));
+    document.getElementById('mobileBtnStyle5')?.addEventListener('click', () => selectMobileCardStyle('style5'));
     document.querySelectorAll('.card-animation-option[data-animation-device="desktop"]').forEach(option => {
       option.addEventListener('click', () => {
         if (!refs.cardAnimationSelect) return;

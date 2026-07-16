@@ -400,7 +400,7 @@ export async function onRequest(context) {
   let sidebarToggleClass = '';
   let mobileToggleVisibilityClass = 'lg:hidden';
   let adminIconHtml = '';
-  const searchToggleHtml = `
+  const searchToggleHtml = S.home_hide_search ? '' : `
     <button id="searchToggleBtn" class="top-action-icon search-toggle-icon" title="切换搜索框">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     </button>`;
@@ -455,6 +455,9 @@ export async function onRequest(context) {
     if (S.home_hide_admin) hideIconsCss += 'a[href^="/admin"] { display: none !important; }';
     hideIconsCss += '</style>';
     headInjections += hideIconsCss;
+  }
+  if (S.home_hide_search) {
+    headInjections += '<style>.home-search-shell { display: none !important; }</style>';
   }
 
   // 背景层 HTML
