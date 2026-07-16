@@ -97,8 +97,8 @@ export function renderGroupedSiteCards(groups, settings) {
     const isFirst = groupIndex === 0;
     const safeName = escapeHTML(group.categoryName);
     const headingHtml = `<div class="category-section-heading col-span-full${isFirst ? '' : ' mt-6'}">
-      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-2">
-        ${safeName}<span class="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">${group.sites.length} 个</span>
+      <h3 class="text-xl font-bold text-white border-b border-white/25 pb-2 mb-2" style="text-shadow:0 1px 3px rgba(0,0,0,0.3)">
+        ${safeName}
       </h3>
     </div>`;
     return headingHtml + renderSiteCards(group.sites, settings);

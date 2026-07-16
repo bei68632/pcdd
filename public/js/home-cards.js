@@ -350,7 +350,7 @@
         if (!group.sites || group.sites.length === 0) return;
         const heading = document.createElement('div');
         heading.className = 'category-section-heading col-span-full' + (groupIndex > 0 ? ' mt-6' : '');
-        heading.innerHTML = '<h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-2">' + group.categoryName + '<span class="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">' + group.sites.length + ' 个</span></h3>';
+        heading.innerHTML = '<h3 class="text-xl font-bold text-white border-b border-white/25 pb-2 mb-2" style="text-shadow:0 1px 3px rgba(0,0,0,0.3)">' + group.categoryName + '</h3>';
         sitesGrid.appendChild(heading);
         group.sites.forEach(site => {
           sitesGrid.appendChild(createSingleCard(site, globalIndex, animationType, isStyle5, logoSize));

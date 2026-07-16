@@ -698,7 +698,7 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
 
 .site-card.style-5 .card-body-area {
     text-align: center;
-    padding: 44px 12px 10px;
+    padding: 28px 12px 10px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -707,8 +707,6 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
 
 .site-card.style-5 .site-title {
     text-align: center;
-    font-weight: 600;
-    font-size: 0.9375rem;
     margin-bottom: 4px;
 }
 
@@ -761,7 +759,7 @@ body:not(.app-ready) #sidebar a[href="?catalog=all"] {
         margin-top: -28px;
     }
     .site-card.style-5 .card-body-area {
-        padding: 36px 10px 8px;
+        padding: 20px 10px 8px;
     }
 }
 
