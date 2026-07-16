@@ -4,7 +4,7 @@ import { FONT_MAP, HOME_CACHE_TTL } from './constants';
 import { escapeHTML, sanitizeUrl, normalizeSortOrder, getStyleStr, sanitizeStyleColor } from './lib/utils';
 import { getSettingsKeys, parseSettings } from './lib/settings-parser';
 import { renderHorizontalMenu, renderVerticalMenu } from './lib/menu-renderer';
-import { renderSiteCards, renderEmptyState } from './lib/card-renderer';
+import { renderSiteCards, renderEmptyState, renderGroupedSiteCards } from './lib/card-renderer';
 import { buildCardHydrationState } from './lib/card-model';
 import { ensureSchemaReady } from './lib/schema-migration';
 import { resolveWallpaperUrl } from './lib/wallpaper-defaults';
@@ -171,6 +171,34 @@ export async function onRequest(context) {
   };
   sortCats(rootCategories);
 
+  function collectDescendantIds(catMap, parentId) {
+    const ids = [parentId];
+    const cat = catMap.get(parentId);
+    if (cat && cat.children) {
+      cat.children.forEach(child => { ids.push(...collectDescendantIds(catMap, child.id)); });
+    }
+    return ids;
+  }
+
+  function buildCategoryGroups(siteList, rootCats) {
+    const siteMap = new Map();
+    siteList.forEach(site => {
+      if (!siteMap.has(site.catelog_id)) siteMap.set(site.catelog_id, []);
+      siteMap.get(site.catelog_id).push(site);
+    });
+    const groups = [];
+    function collectGroups(cats) {
+      cats.forEach(cat => {
+        if (siteMap.has(cat.id)) {
+          groups.push({ categoryName: cat.catelog, categoryId: cat.id, sites: siteMap.get(cat.id) });
+        }
+        if (cat.children) collectGroups(cat.children);
+      });
+    }
+    collectGroups(rootCats);
+    return groups;
+  }
+
   // === 4. 解析设置 ===
   const S = parseSettings(settingsResult.results || settingsResult);
 
@@ -202,11 +230,19 @@ export async function onRequest(context) {
   let targetCategoryIds = [];
   let currentCatalogName = '';
   const catalogExists = requestedCatalogId !== null;
+  let shouldGroupByCategory = false;
 
   if (catalogExists) {
     const requestedCategory = categoryMap.get(requestedCatalogId);
     currentCatalogName = requestedCategory.catelog;
-    targetCategoryIds.push(requestedCatalogId);
+    if (requestedCategory.children && requestedCategory.children.length > 0) {
+      shouldGroupByCategory = true;
+      targetCategoryIds = collectDescendantIds(categoryMap, requestedCatalogId);
+    } else {
+      targetCategoryIds = [requestedCatalogId];
+    }
+  } else {
+    shouldGroupByCategory = true;
   }
 
   const sites = targetCategoryIds.length > 0
@@ -235,9 +271,15 @@ export async function onRequest(context) {
   const catalogLinkMarkup = renderVerticalMenu(rootCategories, currentCatalogName, isCustomWallpaper);
 
   // === 10. 生成站点卡片 HTML ===
-  let sitesGridMarkup = sites.length > 0
-    ? renderSiteCards(sites, S)
-    : renderEmptyState(categories.length, S.home_hide_admin);
+  let sitesGridMarkup;
+  if (shouldGroupByCategory && sites.length > 0) {
+    const groups = buildCategoryGroups(sites, rootCategories);
+    sitesGridMarkup = renderGroupedSiteCards(groups, S) || renderEmptyState(categories.length, S.home_hide_admin);
+  } else {
+    sitesGridMarkup = sites.length > 0
+      ? renderSiteCards(sites, S)
+      : renderEmptyState(categories.length, S.home_hide_admin);
+  }
 
   // === 11. 计算 Grid 列数 ===
   const getMobileGridClass = (cols) => {
@@ -253,7 +295,7 @@ export async function onRequest(context) {
   };
   const getCardStyleGridClass = (style, prefix) => {
     if (style === 'style3') return `${prefix}-card-style3`;
-    return style === 'style2' ? `${prefix}-card-style2` : `${prefix}-card-style1`;
+    return (style === 'style2' || style === 'style4' || style === 'style5') ? `${prefix}-card-style2` : `${prefix}-card-style1`;
   };
   const mobileCardStyleClass = getCardStyleGridClass(S.mobile_layout_card_style, 'mobile');
   const desktopCardStyleClass = getCardStyleGridClass(S.layout_card_style, 'desktop');
@@ -358,6 +400,10 @@ export async function onRequest(context) {
   let sidebarToggleClass = '';
   let mobileToggleVisibilityClass = 'lg:hidden';
   let adminIconHtml = '';
+  const searchToggleHtml = `
+    <button id="searchToggleBtn" class="top-action-icon search-toggle-icon" title="切换搜索框">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>`;
   const themeIconHtml = `
     <button id="themeToggleBtn" class="top-action-icon theme-action-icon" title="切换主题">
       <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block dark:hidden"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
@@ -384,7 +430,7 @@ export async function onRequest(context) {
       <div class="hidden min-[550px]:block">${horizontalHeaderContent}</div>`;
   }
 
-  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${themeIconHtml}${adminIconHtml}</div>`;
+  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${searchToggleHtml}${themeIconHtml}${adminIconHtml}</div>`;
   const leftTopActionHtml = `
     <div class="fixed top-4 left-4 z-50 ${mobileToggleVisibilityClass}">
       <button id="sidebarToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -508,6 +554,9 @@ export async function onRequest(context) {
   const safeSitesJson = JSON.stringify(cardHydrationState.cards).replace(/</g, '\\u003c');
   const safeCardConfigJson = JSON.stringify(cardHydrationState.config).replace(/</g, '\\u003c');
   const safeCardConfigsJson = JSON.stringify(cardHydrationState.configs).replace(/</g, '\\u003c');
+  const safeCategoriesJson = JSON.stringify(
+    categories.map(c => ({ id: c.id, name: c.catelog, parent_id: c.parent_id, sort_order: c.sort_order }))
+  ).replace(/</g, '\\u003c');
   const safeLayoutConfigJson = JSON.stringify({
     hideDesc: S.layout_hide_desc,
     hideLinks: S.layout_hide_links,
@@ -545,7 +594,7 @@ export async function onRequest(context) {
   } else {
     html = html.replace(
       mainJsMarker,
-      () => `<script>window.IORI_SITES=${safeSitesJson};window.IORI_CARD_CONFIG=${safeCardConfigJson};window.IORI_CARD_CONFIGS=${safeCardConfigsJson};window.IORI_LAYOUT_CONFIG=${safeLayoutConfigJson};</script>\n  ${mainJsMarker}`
+      () => `<script>window.IORI_SITES=${safeSitesJson};window.IORI_CATEGORIES=${safeCategoriesJson};window.IORI_CARD_CONFIG=${safeCardConfigJson};window.IORI_CARD_CONFIGS=${safeCardConfigsJson};window.IORI_LAYOUT_CONFIG=${safeLayoutConfigJson};</script>\n  ${mainJsMarker}`
     );
   }
 

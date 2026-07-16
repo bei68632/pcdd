@@ -221,7 +221,10 @@
         const filteredSites = cardController.getSitesForCatalog(catalogId);
         cardController.setActiveCatalogId(catalogId);
         cardController.renderSites(filteredSites);
-        Home.updateHeading?.(null, catalogId ? catalogName : null, filteredSites.length);
+        const totalCount = Array.isArray(filteredSites) && filteredSites.length > 0 && filteredSites[0].categoryName !== undefined
+          ? filteredSites.reduce((sum, g) => sum + (g.sites ? g.sites.length : 0), 0)
+          : filteredSites.length;
+        Home.updateHeading?.(null, catalogId ? catalogName : null, totalCount);
         updateNavigationState(catalogId);
 
         const config = window.IORI_LAYOUT_CONFIG || {};
@@ -354,10 +357,12 @@
       }
 
       if (lastId === 'all') {
-        const allSites = window.IORI_SITES || [];
+        const filteredSites = cardController.getSitesForCatalog(null);
         cardController.setActiveCatalogId(null);
-        cardController.renderSites(allSites);
-        Home.updateHeading?.(null, null, allSites.length);
+        cardController.renderSites(filteredSites);
+        const totalCount = Array.isArray(filteredSites) && filteredSites.length > 0 && filteredSites[0].categoryName !== undefined
+          ? filteredSites.reduce((sum, g) => sum + (g.sites ? g.sites.length : 0), 0) : filteredSites.length;
+        Home.updateHeading?.(null, null, totalCount);
         updateNavigationState(null);
         return;
       }
@@ -370,7 +375,9 @@
 
         cardController.setActiveCatalogId(lastId);
         cardController.renderSites(filteredSites);
-        Home.updateHeading?.(null, catalogName, filteredSites.length);
+        const totalCount = Array.isArray(filteredSites) && filteredSites.length > 0 && filteredSites[0].categoryName !== undefined
+          ? filteredSites.reduce((sum, g) => sum + (g.sites ? g.sites.length : 0), 0) : filteredSites.length;
+        Home.updateHeading?.(null, catalogName, totalCount);
         updateNavigationState(lastId);
       } else {
         localStorage.removeItem('iori_last_category');

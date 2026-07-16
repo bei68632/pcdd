@@ -164,6 +164,35 @@
     });
   }
 
+  function initSearchToggle() {
+    const searchToggleBtn = document.getElementById('searchToggleBtn');
+    const searchShells = document.querySelectorAll('.home-search-shell');
+    if (!searchToggleBtn || !searchShells.length) return;
+
+    const applyState = (hidden) => {
+      searchShells.forEach(el => {
+        el.style.display = hidden ? 'none' : '';
+      });
+      if (hidden) {
+        searchToggleBtn.classList.add('search-hidden');
+        searchToggleBtn.style.opacity = '0.5';
+      } else {
+        searchToggleBtn.classList.remove('search-hidden');
+        searchToggleBtn.style.opacity = '';
+      }
+    };
+
+    const saved = localStorage.getItem('search_hidden');
+    let isHidden = saved === 'true';
+    applyState(isHidden);
+
+    searchToggleBtn.addEventListener('click', () => {
+      isHidden = !isHidden;
+      applyState(isHidden);
+      localStorage.setItem('search_hidden', String(isHidden));
+    });
+  }
+
   Home.initCommonUi = function () {
     const sidebarController = initSidebar();
     Home.closeSidebarMenu = sidebarController.closeSidebarMenu;
@@ -173,5 +202,6 @@
     initBackToTop();
     initHitokoto();
     initThemeToggle();
+    initSearchToggle();
   };
 })();

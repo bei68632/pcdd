@@ -2,6 +2,7 @@
 // 渲染站点卡片网格 HTML
 
 import { buildCardTemplateConfig, buildCardViewModel } from './card-model';
+import { escapeHTML } from './utils';
 
 /**
  * 渲染站点卡片网格 HTML
@@ -13,9 +14,34 @@ export function renderSiteCards(sites, settings) {
   const config = buildCardTemplateConfig(settings);
   const processed = sites.map(site => buildCardViewModel(site));
 
+  const isStyle5 = config.cardStyle === 'style5';
+
   return processed.map((card, index) => {
     const isAboveFold = index < config.aboveFoldImageCount;
     const imgLoadingAttrs = isAboveFold ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"';
+
+    // 风格五：pcdd.in 风格 — 上色块 + 大Logo + 访问按钮
+    if (isStyle5) {
+      const accentIdx = (card.id || index) % 6;
+      const logoHtml5 = card.logoUrlHtml
+        ? `<img src="${card.logoUrlHtml}" alt="${card.nameHtml}" class="card-logo-img" ${imgLoadingAttrs}>`
+        : `<div class="card-logo-img rounded-xl bg-primary-600 flex items-center justify-center text-white font-semibold text-2xl shadow-inner">${card.cardInitialHtml}</div>`;
+      const descHtml5 = config.hideDesc ? '' : `<p class="${config.descClass}" title="${card.descHtml}">${card.descHtml}</p>`;
+      const categoryHtml5 = config.hideCategory ? '' : `<span class="${config.categoryClass}">${card.catalogHtml}</span>`;
+      return `
+      <div class="${config.baseCardClass} ${config.frostedClass} style-5 card-accent-${accentIdx} card-anim-enter" data-id="${card.id}">
+        <div class="card-accent-bar"></div>
+        <div class="card-logo-wrap">${logoHtml5}</div>
+        <div class="site-card-content">
+          <div class="card-body-area">
+            <h3 class="${config.titleClass}">${card.nameHtml}</h3>
+            <div class="card-meta">${categoryHtml5}</div>
+            ${descHtml5}
+          </div>
+          <a href="${card.urlHtml || '#'}" ${card.hasValidUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="card-visit-btn">访问网站</a>
+        </div>
+      </div>`;
+    }
 
     const descHtml = config.hideDesc ? '' : `<p class="${config.descClass}" title="${card.descHtml}">${card.descHtml}</p>`;
 
@@ -64,6 +90,21 @@ export function renderSiteCards(sites, settings) {
  * @param {boolean} hideAdmin - 是否隐藏管理入口
  * @returns {string}
  */
+export function renderGroupedSiteCards(groups, settings) {
+  if (!groups || groups.length === 0) return '';
+  return groups.map((group, groupIndex) => {
+    if (!group.sites || group.sites.length === 0) return '';
+    const isFirst = groupIndex === 0;
+    const safeName = escapeHTML(group.categoryName);
+    const headingHtml = `<div class="category-section-heading col-span-full${isFirst ? '' : ' mt-6'}">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-2">
+        ${safeName}<span class="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">${group.sites.length} 个</span>
+      </h3>
+    </div>`;
+    return headingHtml + renderSiteCards(group.sites, settings);
+  }).join('');
+}
+
 export function renderEmptyState(categoryCount, hideAdmin) {
   const emptyStateText = categoryCount === 0 ? '欢迎使用 iori-nav' : '暂无书签';
   const emptyStateSub = categoryCount === 0

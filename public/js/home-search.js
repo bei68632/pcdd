@@ -43,6 +43,14 @@
       const normalizedKeyword = String(keyword || '').toLowerCase().trim();
       const cached = getSearchCardCache();
 
+      const groupHeadings = sitesGrid?.querySelectorAll('.category-section-heading');
+      if (groupHeadings) {
+        groupHeadings.forEach(el => {
+          if (normalizedKeyword === '') { el.classList.remove('hidden'); }
+          else { el.classList.add('hidden'); }
+        });
+      }
+
       cached.forEach(({ el, text }) => {
         if (normalizedKeyword === '' || text.includes(normalizedKeyword)) {
           el.classList.remove('hidden');

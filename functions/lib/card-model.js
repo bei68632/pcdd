@@ -29,6 +29,9 @@ export function buildCardTemplateConfig(settings = {}, device = 'desktop') {
   const isMobile = device === 'mobile';
   const cardStyle = getDeviceSetting(settings, device, 'layout_card_style', isMobile ? 'style2' : 'style1') || (isMobile ? 'style2' : 'style1');
   const isNavigationTileStyle = cardStyle === 'style3';
+  const isStyle4 = cardStyle === 'style4';
+  const isStyle5 = cardStyle === 'style5';
+  const isLargeLogoStyle = isStyle4 || isStyle5;
   const hideDesc = isNavigationTileStyle || getDeviceSetting(settings, device, 'layout_hide_desc', isMobile) === true;
   const hideLinks = isNavigationTileStyle || getDeviceSetting(settings, device, 'layout_hide_links', isMobile) === true;
   const hideCategory = isNavigationTileStyle || getDeviceSetting(settings, device, 'layout_hide_category', false) === true;
@@ -68,7 +71,7 @@ export function buildCardTemplateConfig(settings = {}, device = 'desktop') {
       ? 'site-card group h-full flex flex-col overflow-hidden transition-all'
       : 'site-card group h-full flex flex-col bg-white border border-primary-100/60 shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700',
     frostedClass: enableFrostedGlass ? 'frosted-glass-effect' : '',
-    cardStyleClass: cardStyle === 'style2' ? 'style-2' : (isNavigationTileStyle ? 'style-3' : ''),
+    cardStyleClass: cardStyle === 'style2' ? 'style-2' : (isNavigationTileStyle ? 'style-3' : (isStyle4 ? 'style-4' : (isStyle5 ? 'style-5' : ''))),
     titleClass: 'site-title text-base font-medium text-gray-900 dark:text-gray-100 truncate transition-all duration-300 origin-left',
     descClass: 'mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2',
     categoryClass: 'site-category inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs font-medium bg-secondary-100 text-primary-700 dark:bg-secondary-800 dark:text-primary-300',
@@ -77,7 +80,9 @@ export function buildCardTemplateConfig(settings = {}, device = 'desktop') {
     copyButtonBaseClass: 'copy-btn relative flex items-center px-2 py-1 rounded-full text-xs font-medium transition-colors',
     copyButtonEnabledClass: 'bg-accent-100 text-accent-700 hover:bg-accent-200 dark:bg-accent-900/30 dark:text-accent-300 dark:hover:bg-accent-900/50',
     copyButtonDisabledClass: 'bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500',
-    logoClass: 'w-10 h-10 rounded-lg object-cover bg-gray-100 dark:bg-gray-700',
+    logoClass: isLargeLogoStyle
+      ? 'card-logo-img rounded-xl object-cover bg-gray-100 dark:bg-gray-700'
+      : 'w-10 h-10 rounded-lg object-cover bg-gray-100 dark:bg-gray-700',
     siteIconClass: 'site-icon flex-shrink-0 mr-4 transition-all duration-300',
   };
 }
